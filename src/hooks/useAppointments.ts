@@ -1,108 +1,42 @@
 import { useEffect, useState } from 'react'
 import {
-	createAppointment,
-	getAvailableTimes
+	getAppointments
 } from '../services/appointment.api'
-import type {
-	Appointment,
-	CreateAppointment
-} from '../types/appointment'
+import type { Appointment } from '../types/appointment'
 
 export function useAppointments() {
-	const [date, setDate] = useState('')
-	const [availableTimes, setAvailableTimes] = useState<string[]>([])
-	const [selectedTime, setSelectedTime] = useState('')
-	const [appointment, setAppointment] =
-		useState<Appointment | null>(null)
-
-	const [loadingTimes, setLoadingTimes] = useState(false)
-	const [creatingAppointment, setCreatingAppointment] =
-		useState(false)
-
+	const [appointments, setAppointments] = useState<Appointment[]>([])
+	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState('')
 
 	useEffect(() => {
-		if (!date) {
-			return
-		}
-
-		async function loadAvailableTimes() {
+		async function loadAppointments() {
 			try {
-				setLoadingTimes(true)
+				setLoading(true)
 				setError('')
-				setSelectedTime('')
 
-				const times = await getAvailableTimes(date)
+				const data = await getAppointments()
 
-				setAvailableTimes(times)
+				setAppointments(data)
 			} catch (error) {
-				setAvailableTimes([])
-
 				if (error instanceof Error) {
 					setError(error.message)
 				} else {
 					setError(
-						'Não foi possível buscar os horários disponíveis.'
+						'Não foi possível buscar os agendamentos.'
 					)
 				}
 			} finally {
-				setLoadingTimes(false)
+				setLoading(false)
 			}
 		}
 
-		loadAvailableTimes()
-	}, [date])
-
-	function handleDateChange(value: string) {
-		setDate(value)
-		setAvailableTimes([])
-		setSelectedTime('')
-		setError('')
-	}
-
-	async function handleCreateAppointment(
-		data: CreateAppointment
-	) {
-		try {
-			setCreatingAppointment(true)
-			setError('')
-
-			const createdAppointment =
-				await createAppointment(data)
-
-			setAppointment(createdAppointment)
-		} catch (error) {
-			if (error instanceof Error) {
-				setError(error.message)
-			} else {
-				setError(
-					'Não foi possível realizar o agendamento.'
-				)
-			}
-		} finally {
-			setCreatingAppointment(false)
-		}
-	}
-
-	function reset() {
-		setDate('')
-		setAvailableTimes([])
-		setSelectedTime('')
-		setAppointment(null)
-		setError('')
-	}
+		loadAppointments()
+	}, [])
 
 	return {
-		date,
-		availableTimes,
-		selectedTime,
-		appointment,
-		loadingTimes,
-		creatingAppointment,
-		error,
-		handleDateChange,
-		setSelectedTime,
-		handleCreateAppointment,
-		reset
+		appointments,
+		loading,
+		error
 	}
 }

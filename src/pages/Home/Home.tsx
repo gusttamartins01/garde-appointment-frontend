@@ -4,7 +4,7 @@ import { AppointmentForm } from "../../components/AppointmentForm/AppointmentFor
 import { DatePicker } from "../../components/DatePicker/DatePicker";
 import { Loading } from "../../components/Loading/Loading";
 import { TimeSlot } from "../../components/TimeSlot/TimeSlot";
-import { useAppointments } from "../../hooks/useAppointments";
+import { useAppointments } from "../../hooks/useAppointment";
 
 export function Home() {
   const {

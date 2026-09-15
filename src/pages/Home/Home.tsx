@@ -23,7 +23,7 @@ export function Home() {
 
   return (
     <main className="min-h-screen bg-gray-950 px-4 py-10">
-      <div className="mx-auto max-w-2xl">
+      <div className=" m-20 flex justify-center items-center mx-auto max-w-2xl">
         <div className="rounded-2xl bg-gray-800 p-6 shadow-sm md:p-8">
           {appointment ? (
             <AppointmentConfirmation
